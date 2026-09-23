@@ -15,18 +15,18 @@ Este repositório foi reconstruído a partir do snapshot `eventos-main(2).zip` f
 - Project ref: `kcixoybbxcogpqlgeaoi`
 - Região: `sa-east-1`
 - URL: `https://kcixoybbxcogpqlgeaoi.supabase.co`
-- Estado observado em 23/09/2026: `INACTIVE`
+- Estado validado em 23/09/2026: `ACTIVE_HEALTHY`
 
 As migrations canônicas estão em `supabase/migrations/`. A migration `20260910160412_add_welcome_guide_cms.sql` contém a infraestrutura do Guia de Boas-vindas.
 
 ## Vercel
 
-O código conserva `vercel.json` com rewrite SPA para `index.html`. Os domínios conhecidos são:
+O código conserva `vercel.json` com rewrite SPA para `index.html`. Os domínios previstos são:
 
 - `eventosinvestrs.com.br`
 - `bemvindo.eventosinvestrs.com.br`
 
-A conexão Vercel disponível durante a recuperação não tinha acesso aos projetos/deployments desses domínios, portanto variáveis de ambiente e metadados de projeto não foram copiados.
+A produção é disparada por push na branch `main`.
 
 ## Variáveis de ambiente
 
@@ -39,4 +39,4 @@ VITE_SUPABASE_PUBLISHABLE_KEY=
 
 ## Verificação
 
-O snapshot não contém chaves Supabase gravadas no código. A instalação/build não pôde ser executada no ambiente de recuperação porque o acesso ao registry npm estava indisponível; o lockfile original foi preservado para uma instalação reproduzível.
+A reconstrução foi validada no GitHub Actions após a restauração: instalação de dependências, TypeScript, lint, testes unitários e de integração, build e fluxos E2E críticos concluíram com sucesso. O snapshot não contém chaves Supabase privilegiadas gravadas no código.
