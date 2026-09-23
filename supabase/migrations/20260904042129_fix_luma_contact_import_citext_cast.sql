@@ -1,0 +1,5 @@
+-- Migration histórica aplicada no Supabase remoto em 2026-09-04.
+-- A correção de casts CITEXT desta versão já está incorporada integralmente em
+-- 20260904042056_fix_contact_maintenance_and_add_luma_contact_import.sql
+-- para que uma reconstrução do banco a partir do repositório nasça no estado final.
+-- Este arquivo preserva o versionamento remoto sem reaplicar a função.

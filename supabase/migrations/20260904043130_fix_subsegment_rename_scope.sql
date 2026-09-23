@@ -1,0 +1,5 @@
+-- Migration histórica aplicada no Supabase remoto em 2026-09-04.
+-- A correção do escopo de renomeação de subsetores desta versão já está
+-- incorporada integralmente em 20260904043117_add_event_target_segments.sql
+-- para que uma reconstrução do banco a partir do repositório nasça no estado final.
+-- Este arquivo preserva o versionamento remoto sem reaplicar a função.

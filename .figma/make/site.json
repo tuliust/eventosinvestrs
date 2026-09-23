@@ -1,0 +1,10 @@
+{
+  "description": "This responsive web app enhances productivity for teams with CRM functionalities, real-time operations, and seamless navigation across devices.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
