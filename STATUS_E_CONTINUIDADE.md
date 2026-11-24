@@ -28,6 +28,19 @@ O usuário executou verificações locais em `C:\Users\Tulius\Documents\github\e
 - **Próxima evidência:** confirmação mascarada de URL correta, prefixo de chave publicável e ausência de chave secret, seguida de `pnpm install --frozen-lockfile` quando necessário, `pnpm build` e teste local de login e leitura. Nenhum fluxo de escrita ou deploy autorizado.
 - Exclusão da branch `demo-case` ainda pendente; o último `git push origin --delete demo-case` falhou por autenticação GitHub, sem comprovação de exclusão remota.
 
+### Configuração local do Supabase confirmada — 23/11/2026
+
+O usuário criou `.env.local` a partir da referência local e executou verificações mascaradas em PowerShell:
+
+- `VITE_SUPABASE_URL` corresponde exatamente a `https://kcixoybbxcogpqlgeaoi.supabase.co`: **True**.
+- `VITE_SUPABASE_PUBLISHABLE_KEY` com prefixo `sb_publishable_`: **True**. O valor não foi compartilhado.
+- Prefixo `sb_secret_` nessa variável pública: **False**.
+- `git status --short --branch`: `## main...origin/main` — sem alterações locais apresentadas.
+- Aplicação na branch `main` (não demo); o mock Playwright não é utilizado para a integração real.
+- **Conclusão parcial:** variáveis corretas e configuração local pronta para testes, mas autenticação, consultas reais e build ainda não testados no navegador nesta etapa.
+- **Próxima verificação:** `pnpm build` e `pnpm dev` com pnpm 10.34.3; verificar navegação, login administrativo existente, contatos, organizações, eventos e mailing somente por leitura.
+- Não executar migrations, seeds, importações, envio de e-mails, convites, check-in ou operações de escrita. Não mudar Vercel.
+
 ### Inventário recuperado — leitura
 
 - **33 tabelas `public`**, todas com RLS habilitado.
