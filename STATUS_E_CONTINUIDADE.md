@@ -1,6 +1,6 @@
 # Eventos Invest RS — Estado do projeto e guia de continuidade
 
-> **Atualização da limpeza Git (23/11/2026):** o usuário autorizou excluir `demo-case`, porém a branch **ainda existe no GitHub** (SHA `f38d7a26b40c6b27010794caa8964c129c5ce46a`). A conexão GitHub nesta conversa não oferece exclusão de branches; **não considerar concluída**. `main` e o Supabase original permanecem preservados.
+> **Atualização da limpeza Git (verificação posterior em 23/11/2026):** a branch remota `demo-case` foi **excluída e sua ausência confirmada diretamente na lista de branches do GitHub**. O usuário executou `git fetch --prune origin` em ambos os repositórios; `git branch -a --list '*demo-case*'` apresentou apenas `demo-case` **local**. **Pendente: excluir a referência local** com a `main` limpa e sem worktree usando essa branch. `main`, branch documental e dados Supabase foram preservados.
 
 > **Relatório consolidado para futuras retomadas:** [RELATORIO_DE_RETOMADA_2026-11-23.md](RELATORIO_DE_RETOMADA_2026-11-23.md) — estado atual, evidências, procedimentos e pendências. O relatório é a referência rápida; este documento preserva a trilha histórica da auditoria.
 
@@ -30,7 +30,7 @@ O usuário executou verificações locais em `C:\Users\Tulius\Documents\github\e
 - `.gitignore` da `main` exclui `.env*` com exceção de `.env.example`; a chave pública/ambiente deve permanecer exclusivamente em `.env.local`.
 - A `.env.example` já contém a URL original e o nome `VITE_SUPABASE_PUBLISHABLE_KEY`; copiar para `.env.local` e substituir o valor de exemplo pela chave pública `sb_publishable_` do projeto `kcixoybbxcogpqlgeaoi`. Não inserir uma chave secret/service-role nas variáveis `VITE_`, e não imprimir ou compartilhar credenciais.
 - **Próxima evidência (atualização):** URL e chave publicável já confirmadas, `pnpm run typecheck`, `pnpm run lint` e `pnpm run build` aprovados. Falta teste local de login e leitura. Nenhum fluxo de escrita ou deploy autorizado.
-- Exclusão da branch `demo-case` ainda pendente; o último `git push origin --delete demo-case` falhou por autenticação GitHub, sem comprovação de exclusão remota.
+- Exclusão remota de `demo-case` **confirmada posteriormente no GitHub**, apesar da tentativa anterior via PowerShell ter falhado por autenticação; exclusão **local** ainda pendente.
 
 ### Configuração local do Supabase confirmada — 23/11/2026
 
@@ -77,7 +77,7 @@ Após aprovação de TypeScript, lint e build na `main`, o usuário confirmou se
 
 **Limites ainda pendentes:** não foram executados testes de gravação, contatos, imports, check-in, convites, comunicações, administração de usuários, Edge Functions, permissões multiusuário nem autenticação/consulta independente no deployment Vercel. A publicação atual do projeto Vercel `eventos` ainda exige reconciliação com o histórico da `main` consultada; não publicar automaticamente.
 
-**Limpeza da demo:** a branch `demo-case` continua presente no GitHub, apesar da decisão explícita do usuário de removê-la. O comando de exclusão remoto falhou antes por falta de autenticação GitHub; a conexão ChatGPT/GitHub disponível não expõe uma operação de exclusão de branch. Fazer remoção controlada no GitHub Web após conferir a `main`; depois excluir a referência local. Não apagar arquivos não rastreados nem modificar os dados de produção.
+**Limpeza da demo — atualização posterior:** a branch `demo-case` foi excluída do GitHub e a ausência no remoto foi confirmada diretamente. Em PowerShell, após `git fetch --prune`, a listagem mostrou apenas a branch **local**. Falta removê-la após confirmar `main`, worktrees e estado limpo. Não apagar arquivos não rastreados nem modificar os dados de produção.
 
 ### Inventário recuperado — leitura
 
@@ -92,7 +92,7 @@ Após aprovação de TypeScript, lint e build na `main`, o usuário confirmou se
 ### Branch de demonstração — descontinuação
 
 - `demo-case`: 2 commits exclusivos em relação à `main` e 0 commits faltantes da `main`, alterando `e2e/mockSupabase.ts` e adicionando `e2e/visualizar-paginas.spec.ts`. **Decisão expressa: não manter a branch demo.**
-- Ainda não foi excluída. Preservar arquivos locais não rastreados até confirmar seu estado e só então remover a branch remota/local.
+- A branch **remota já foi excluída e confirmada**; a referência **local** ainda existe. Preservar arquivos não rastreados e verificar worktrees antes da remoção local.
 - Não executar o Playwright com interceptador/mock para validar o backend real e não importar fixtures artificiais.
 
 ### Vercel e continuidade
