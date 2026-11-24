@@ -1,12 +1,12 @@
 # Eventos Invest RS — Estado do projeto e guia de continuidade
 
-> **Atualização da limpeza Git (verificação posterior em 23/11/2026):** a branch remota `demo-case` foi **excluída e sua ausência confirmada diretamente na lista de branches do GitHub**. O usuário executou `git fetch --prune origin` em ambos os repositórios; `git branch -a --list '*demo-case*'` apresentou apenas `demo-case` **local**. **Pendente: excluir a referência local** com a `main` limpa e sem worktree usando essa branch. `main`, branch documental e dados Supabase foram preservados.
+> **Encerramento da limpeza Git — 23/11/2026: CONCLUÍDO.** A branch `demo-case` foi removida **do GitHub e dos dois computadores locais/repositórios verificados**. O usuário executou o procedimento seguro e enviou saída com `Deleted branch demo-case`, `git branch -a --list '*demo-case*'` vazio e `## main...origin/main` em ambos os repositórios. A ausência das branches remotas foi confirmada diretamente no GitHub. `main`, documentação, banco Supabase e Vercel foram preservados.
 
 > **Relatório consolidado para futuras retomadas:** [RELATORIO_DE_RETOMADA_2026-11-23.md](RELATORIO_DE_RETOMADA_2026-11-23.md) — estado atual, evidências, procedimentos e pendências. O relatório é a referência rápida; este documento preserva a trilha histórica da auditoria.
 
 ## ATUALIZAÇÃO PRIORITÁRIA — SUPABASE RECUPERADO (23/11/2026)
 
-> **Esta seção substitui o estado de perda de acesso ao banco descrito nas seções históricas abaixo.** O projeto Supabase original foi recuperado na nova conta e está ativo. A demonstração em `demo-case` será descontinuada por decisão do usuário. Os dados reais não devem ser substituídos por mocks.
+> **Esta seção substitui o estado de perda de acesso ao banco descrito nas seções históricas abaixo.** O projeto Supabase original foi recuperado na nova conta e está ativo. A demonstração em `demo-case` foi descontinuada, e a branch foi excluída local e remotamente, conforme decisão do usuário. Os dados reais não devem ser substituídos por mocks.
 >
 > **Escopo atualizado em 23/11/2026:** a auditoria de leitura foi seguida de configuração local, build, login administrativo e sete grupos de testes funcionais com dados reais **confirmados pelo usuário**. Vercel não foi alterada. Operações de escrita e homologação independente de produção permanecem pendentes.
 
@@ -30,7 +30,7 @@ O usuário executou verificações locais em `C:\Users\Tulius\Documents\github\e
 - `.gitignore` da `main` exclui `.env*` com exceção de `.env.example`; a chave pública/ambiente deve permanecer exclusivamente em `.env.local`.
 - A `.env.example` já contém a URL original e o nome `VITE_SUPABASE_PUBLISHABLE_KEY`; copiar para `.env.local` e substituir o valor de exemplo pela chave pública `sb_publishable_` do projeto `kcixoybbxcogpqlgeaoi`. Não inserir uma chave secret/service-role nas variáveis `VITE_`, e não imprimir ou compartilhar credenciais.
 - **Próxima evidência (atualização):** URL e chave publicável já confirmadas, `pnpm run typecheck`, `pnpm run lint` e `pnpm run build` aprovados. Falta teste local de login e leitura. Nenhum fluxo de escrita ou deploy autorizado.
-- Exclusão remota de `demo-case` **confirmada posteriormente no GitHub**, apesar da tentativa anterior via PowerShell ter falhado por autenticação; exclusão **local** ainda pendente.
+- Exclusão **remota e local de `demo-case` concluída** e verificada no GitHub e no PowerShell; a tentativa anterior via PowerShell havia falhado por autenticação.
 
 ### Configuração local do Supabase confirmada — 23/11/2026
 
@@ -77,7 +77,7 @@ Após aprovação de TypeScript, lint e build na `main`, o usuário confirmou se
 
 **Limites ainda pendentes:** não foram executados testes de gravação, contatos, imports, check-in, convites, comunicações, administração de usuários, Edge Functions, permissões multiusuário nem autenticação/consulta independente no deployment Vercel. A publicação atual do projeto Vercel `eventos` ainda exige reconciliação com o histórico da `main` consultada; não publicar automaticamente.
 
-**Limpeza da demo — atualização posterior:** a branch `demo-case` foi excluída do GitHub e a ausência no remoto foi confirmada diretamente. Em PowerShell, após `git fetch --prune`, a listagem mostrou apenas a branch **local**. Falta removê-la após confirmar `main`, worktrees e estado limpo. Não apagar arquivos não rastreados nem modificar os dados de produção.
+**Limpeza da demo — CONCLUÍDA:** a branch `demo-case` foi excluída do GitHub e confirmada no remoto. O usuário depois removeu a referência **local** (saída `Deleted branch demo-case`), executou `git branch -a --list '*demo-case*'` sem resultados e confirmou a `main` limpa/sincronizada. Dados e produção foram preservados.
 
 ### Inventário recuperado — leitura
 
@@ -92,7 +92,7 @@ Após aprovação de TypeScript, lint e build na `main`, o usuário confirmou se
 ### Branch de demonstração — descontinuação
 
 - `demo-case`: 2 commits exclusivos em relação à `main` e 0 commits faltantes da `main`, alterando `e2e/mockSupabase.ts` e adicionando `e2e/visualizar-paginas.spec.ts`. **Decisão expressa: não manter a branch demo.**
-- A branch **remota já foi excluída e confirmada**; a referência **local** ainda existe. Preservar arquivos não rastreados e verificar worktrees antes da remoção local.
+- As referências **remota e local** foram excluídas e verificadas em 23/11/2026. A `main` e os arquivos não rastreados foram preservados.
 - Não executar o Playwright com interceptador/mock para validar o backend real e não importar fixtures artificiais.
 
 ### Vercel e continuidade
