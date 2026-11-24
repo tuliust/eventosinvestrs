@@ -140,3 +140,81 @@ A antiga `demo-case` continha código de testes/fixtures de demonstração, incl
 - **Decisão de segurança:** nenhum merge na `main`, deploy, alteração em Auth/RLS, secrets, migrations, importações, comunicação ou check-in. Preparar incorporação **documental** por Pull Request, com revisão antes de merge.
 
 **Status final seguro:** aplicação reintegrada e testada localmente; demo removida; dados e infraestrutura preservados; **produção, integração Git/Vercel e fluxos de escrita ainda não homologados**.
+
+## 9. Auditoria das pendências e execução no VS Code — 23/11/2026
+
+### 9.1 Divergência GitHub/Vercel — CAUSA IDENTIFICADA
+
+- **Repositório recuperado e testado localmente:** `tuliust/eventosinvestrs` (`main` em `43d6bf39f66d152bf57abbb256565061a4cf56e7`).
+- **Git conectado ao projeto Vercel `eventos` (ID `prj_JcLGZfKtIdmkXr17Zjql7DocChow`):** `investrs2026/eventos`, não `tuliust/eventosinvestrs`. Essa vinculação foi obtida do contexto Git dos projetos Vercel.
+- A produção atual `READY` aponta para commit `8613028b8f392ccbb0bccb33d7f61aca7d34b637`, que também é o **identificador do snapshot `eventos-main(2).zip`** citado em `RECOVERY.md`. Assim, a divergência decorre da origem/histórico de recuperação, não de ausência de dados no Supabase.
+- **Não mudar automaticamente o Git conectado:** desconectar `investrs2026/eventos` e ligar `tuliust/eventosinvestrs` pode iniciar um novo deploy no projeto que atende `eventosinvestrs.com.br` e `bemvindo.eventosinvestrs.com.br`.
+- Etapa controlada futura: verificar Vercel → equipe `tuliust` → projeto `eventos` → Settings → Git; preservar o deployment atual e confirmar environment variables; validar um preview/staging da `main` recuperada; somente depois decidir se substitui o vínculo Git e promove o deployment. Instruções oficiais: https://vercel.com/docs/project-configuration/git-settings.
+- Variáveis `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` constam em Production/Preview, mas seus valores **não foram confirmados**. Não copiar credenciais para chat nem executar `vercel env pull` nesta auditoria.
+
+### 9.2 Segurança Supabase — diagnóstico por metadados concluído
+
+O Supabase `Mailing` informa `authenticated_security_definer_function_executable` e `auth_leaked_password_protection` como WARN. Consulta **somente leitura** a `pg_proc` mostrou:
+
+- `add_event_confirmation`, `check_in_event`, `check_in_event_idempotent` e `undo_event_checkin`: `SECURITY DEFINER`, executáveis por `authenticated`, não por `anon`; seus corpos contêm referências a `auth.uid()` e `is_active_staff()`.
+- `current_user_role` e `is_active_staff`: executáveis por `authenticated`, não por `anon`; exercem funções de autorização. O corpo de `current_user_role` referencia `auth.uid()`; `is_active_staff` referencia `current_user_role`.
+- `apply_organization_import_service` e `handle_new_user`: `SECURITY DEFINER`, **sem execução direta concedida a `anon` ou `authenticated`**.
+- Todas as funções listadas têm `search_path` configurado explicitamente; isso não equivale a auditoria de segurança de toda a implementação.
+- **Não revogar** `EXECUTE` de RPCs de check-in automaticamente: o sistema precisa delas para operar. Auditar os corpos e políticas RLS antes de propor mudanças.
+- Verificar no painel Auth a disponibilidade de **leaked password protection**; o Supabase informa disponibilidade no plano **Pro ou superior** (https://supabase.com/docs/guides/auth/password-security). Não foi habilitada nesta rodada.
+
+### 9.3 Integridade e testes sem gravar dados reais
+
+- Histórico de migrations: **41** arquivos canônicos correspondem às **41** entradas do Supabase recuperado; não reaplicar, nem rodar `seed.sql`.
+- Registros recontados: **3.107 contatos**, **3.875 organizações**, **2 eventos**, **69 inscrições**, **1.040 convites**, **13 presenças**, **1.040 vínculos de mailing**.
+- Os sete grupos de testes funcionais locais foram confirmados pelo usuário. A suíte E2E usa **mock sintético**, que não substitui a validação de RLS/Edge Functions com dados reais.
+- Para escrita real (importações, convites, comunicações, check-in e reversão), preparar **staging isolado com dados sintéticos**, contas de teste e saídas externas desativadas, verificar rollback e permissões; depois fazer homologação formal antes de produção.
+
+### 9.4 Comandos seguros para o terminal PowerShell do VS Code
+
+~~~powershell
+Set-Location 'C:\Users\Tulius\Documents\github\eventosinvestrs'
+
+if ((git branch --show-current) -ne 'main') {
+    throw 'Troque para main somente depois de preservar alteracoes locais.'
+}
+git status --short --branch
+git fetch --prune origin
+if ($LASTEXITCODE -ne 0) { throw 'Falha ao consultar GitHub.' }
+git rev-list --left-right --count main...origin/main
+git branch -a --list '*demo-case*'
+git remote get-url origin
+
+if (-not (Test-Path '.env.local')) { throw '.env.local ausente.' }
+$EnvVars = @{}
+Get-Content '.env.local' | ForEach-Object {
+    if ($_ -match '^\s*(VITE_SUPABASE_URL|VITE_SUPABASE_PUBLISHABLE_KEY)\s*=(.*)$') {
+        $EnvVars[$matches[1]] = $matches[2].Trim().Trim('"', "'")
+    }
+}
+$Key = $EnvVars['VITE_SUPABASE_PUBLISHABLE_KEY']
+Write-Output "URL correta: $($EnvVars['VITE_SUPABASE_URL'] -eq 'https://kcixoybbxcogpqlgeaoi.supabase.co')"
+Write-Output "Chave publica: $($Key -like 'sb_publishable_*')"
+Write-Output "Secret indevido: $($Key -like 'sb_secret_*')"
+
+pnpm run typecheck
+if ($LASTEXITCODE -ne 0) { throw 'TypeScript reprovado.' }
+pnpm run lint
+if ($LASTEXITCODE -ne 0) { throw 'Lint reprovado.' }
+pnpm run build
+if ($LASTEXITCODE -ne 0) { throw 'Build reprovado.' }
+
+if (Get-Command vercel -ErrorAction SilentlyContinue) {
+    vercel project inspect eventos --scope tuliust
+} else {
+    Write-Output 'Vercel CLI nao instalado. Use o dashboard.'
+}
+~~~
+
+O `vercel project inspect` é leitura; não altera o vínculo Git. **Não executar** `vercel git connect`, `vercel git disconnect`, `vercel deploy --prod`, `supabase db push`, importações ou check-ins nesta etapa.
+
+### 9.5 Critérios de encerramento
+
+- **Concluído:** banco recuperado; migrations alinhadas; Git e testes locais; exclusão da demo; identificação exata do Git antigo na Vercel; auditoria preliminar dos privilégios de funções; documentação.
+- **Pendente:** validar preview/staging da `main` atual; decidir e executar mudança controlada do vínculo Vercel; conferir os valores das variáveis em ambiente protegido; homologar Auth, RLS, importações, e-mails, convites, check-ins e integrações externas sem dados de produção.
+- Pull Request documental: https://github.com/tuliust/eventosinvestrs/pull/1 (**draft**, sem merge). A incorporação à `main` deve aguardar revisão dos gatilhos de deploy.
