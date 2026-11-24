@@ -126,3 +126,17 @@ A antiga `demo-case` continha código de testes/fixtures de demonstração, incl
 - **Status de limpeza: concluído (remoto e local).** Não há ações adicionais de `demo-case` a executar.
 
 **Estado a registrar no Guia de Retomada:** *Aplicação funcional com Supabase original Mailing recuperado; Git, ambiente, TypeScript, lint, build e 7 grupos de testes locais confirmados em 23/11/2026. Pendentes apenas: reconciliação Vercel e homologação de operações de escrita.*
+
+## 8. Auditoria final de integridade e publicação — 23/11/2026
+
+**Auditoria por leitura efetuada após a remoção de `demo-case`:**
+
+- GitHub: `main` permanece em `43d6bf39f66d152bf57abbb256565061a4cf56e7`; a branch documental difere somente por este relatório e `STATUS_E_CONTINUIDADE.md`. Não há branch remota `demo-case`.
+- Supabase `kcixoybbxcogpqlgeaoi`: `ACTIVE_HEALTHY`; consulta SQL **somente leitura** retornou `contacts=3107`, `organizations=3875`, `events=2`, `event_registrations=69`, `event_invites=1040`, `event_attendances=13`, `mailing_list_contacts=1040`. Valores compatíveis com o inventário da recuperação; nenhuma alteração de registros foi executada.
+- Vercel: projeto `eventos`, deployment de produção `dpl_14jgMHXrVWNXzVhrQKLWBsiTkGKn` com estado `READY`, atribuído a commit `8613028b8f392ccbb0bccb33d7f61aca7d34b637`, **divergente do SHA conhecido de `tuliust/eventosinvestrs/main`**. Os metadados citam repositório `eventos`; é necessário verificar a integração Git antes de qualquer merge ou redeploy.
+- Os aliases do deployment incluem `eventosinvestrs.com.br`, `www.eventosinvestrs.com.br` e `bemvindo.eventosinvestrs.com.br`. O domínio de boas-vindas aparece como verificado no projeto; associação e funcionamento do domínio principal exigem homologação direta.
+- Vercel contém as variáveis sensíveis `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` para Production/Preview, porém **os valores não foram confirmados**.
+- Supabase Security Advisors: 2 avisos `WARN` — função `SECURITY DEFINER` executável por usuários autenticados e proteção contra senhas vazadas desativada. Validar função, autorização efetiva, Auth e integrações externas antes de qualquer ajuste.
+- **Decisão de segurança:** nenhum merge na `main`, deploy, alteração em Auth/RLS, secrets, migrations, importações, comunicação ou check-in. Preparar incorporação **documental** por Pull Request, com revisão antes de merge.
+
+**Status final seguro:** aplicação reintegrada e testada localmente; demo removida; dados e infraestrutura preservados; **produção, integração Git/Vercel e fluxos de escrita ainda não homologados**.
