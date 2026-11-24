@@ -4,7 +4,7 @@
 
 > **Esta seção substitui o estado de perda de acesso ao banco descrito nas seções históricas abaixo.** O projeto Supabase original foi recuperado na nova conta e está ativo. A demonstração em `demo-case` será descontinuada por decisão do usuário. Os dados reais não devem ser substituídos por mocks.
 >
-> **Escopo:** auditoria por leitura. Aplicação local e dados reais no frontend ainda não passaram por novo teste; Vercel não foi alterada.
+> **Escopo atualizado em 23/11/2026:** a auditoria de leitura foi seguida de configuração local, build, login administrativo e sete grupos de testes funcionais com dados reais **confirmados pelo usuário**. Vercel não foi alterada. Operações de escrita e homologação independente de produção permanecem pendentes.
 
 ### Identidade atual
 
@@ -55,6 +55,26 @@ O usuário executou, na `main` sincronizada e com `.env.local` apontando para o 
 - **Próximo teste:** `pnpm dev`; autenticar com usuário administrativo existente e confirmar visualmente a navegação/consultas reais em `/` (Dashboard), `/eventos`, `/mailing`, `/contatos`, `/organizacoes`, `/segmentacoes` e `/relatorios`. O login é em `/login`. Somente leitura, sem criar/importar/editar/excluir registros, fazer check-in ou enviar mensagens.
 - A compilação não comprova por si só que as rotas, autenticação e consultas reais funcionem, tampouco homologa a produção Vercel.
 
+### Testes funcionais com banco real — CONFIRMADOS em 23/11/2026
+
+Após aprovação de TypeScript, lint e build na `main`, o usuário confirmou sete verificações no navegador local, com `.env.local` apontando para o Supabase original `Mailing`:
+
+| Verificação | Resultado |
+| --- | --- |
+| Login administrativo com usuário existente | CONFIRMADO |
+| Dashboard com informações reais | CONFIRMADO |
+| `/contatos` — registros históricos | CONFIRMADO |
+| `/organizacoes` — registros históricos | CONFIRMADO |
+| `/eventos` — eventos e inscrições | CONFIRMADO |
+| `/mailing` — listas e vínculos | CONFIRMADO |
+| Segmentações e relatórios | CONFIRMADO |
+
+**Conclusão:** reintegração funcional local de navegação, autenticação e **leitura** ao banco recuperado concluída, com evidência de confirmação pelo usuário. O banco já continha 3.107 contatos, 3.875 organizações, 2 eventos, 69 inscrições, 1.040 convites e demais registros; não houve nova importação nem aplicação de migrations.
+
+**Limites ainda pendentes:** não foram executados testes de gravação, contatos, imports, check-in, convites, comunicações, administração de usuários, Edge Functions, permissões multiusuário nem autenticação/consulta independente no deployment Vercel. A publicação atual do projeto Vercel `eventos` ainda exige reconciliação com o histórico da `main` consultada; não publicar automaticamente.
+
+**Limpeza da demo:** a branch `demo-case` continua presente no GitHub, apesar da decisão explícita do usuário de removê-la. O comando de exclusão remoto falhou antes por falta de autenticação GitHub; a conexão ChatGPT/GitHub disponível não expõe uma operação de exclusão de branch. Fazer remoção controlada no GitHub Web após conferir a `main`; depois excluir a referência local. Não apagar arquivos não rastreados nem modificar os dados de produção.
+
 ### Inventário recuperado — leitura
 
 - **33 tabelas `public`**, todas com RLS habilitado.
@@ -90,6 +110,10 @@ O usuário executou, na `main` sincronizada e com `.env.local` apontando para o 
 > **ALERTA:** os dados exibidos nos prints são **fictícios (mock)**. A prévia funciona por meio de um simulador do Supabase executado no Playwright; **não há conexão ativa e validada com o Supabase original**. Login, indicadores e mensagens de sincronização apresentados nessa prévia não demonstram operação real.
 >
 > **ATENÇÃO — GITHUB x COMPUTADOR:** em 23/11/2026, o GitHub ainda continha o mock pequeno original em `e2e/mockSupabase.ts` e não continha `e2e/visualizar-paginas.spec.ts`. A versão enriquecida usada nos prints está/estava apenas no computador local. **Este documento NÃO faz upload desses dois arquivos. É necessário versioná-los separadamente**, conforme a seção 6.
+
+## ARQUIVO HISTÓRICO — estado anterior à recuperação
+
+> As seções numeradas abaixo descrevem o período de perda de acesso, o modo de demonstração e pendências antigas. Seu status foi **substituído** pelas verificações de recuperação e testes funcionais registradas no início deste documento. Não seguir procedimentos históricos de reconstrução, seed ou uso de mocks como se fossem instruções atuais.
 
 ## 1. Identificação
 
