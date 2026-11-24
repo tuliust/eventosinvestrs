@@ -1,9 +1,9 @@
 # RELATÓRIO DE RETOMADA — EVENTOSINVESTRS
 
-> **Atualização da limpeza Git (23/11/2026):** o usuário autorizou excluir `demo-case`, porém a branch **ainda existe no GitHub** (SHA `f38d7a26b40c6b27010794caa8964c129c5ce46a`). A conexão GitHub nesta conversa não oferece exclusão de branches; **não considerar concluída**. `main` e o Supabase original permanecem preservados.
+> **Atualização da limpeza Git (verificação posterior em 23/11/2026):** a branch remota `demo-case` foi **excluída e sua ausência confirmada diretamente na lista de branches do GitHub**. O usuário executou `git fetch --prune origin` em ambos os repositórios; `git branch -a --list '*demo-case*'` apresentou apenas `demo-case` **local**. **Pendente: excluir a referência local** com a `main` limpa e sem worktree usando essa branch. `main`, branch documental e dados Supabase foram preservados.
 
 **Data da verificação:** 23/11/2026  
-**Status:** **REINTEGRAÇÃO FUNCIONAL LOCAL CONCLUÍDA** com o Supabase original `Mailing`; limpeza de `demo-case` e reconciliação de produção Vercel ainda pendentes.  
+**Status:** **REINTEGRAÇÃO FUNCIONAL LOCAL CONCLUÍDA** com o Supabase original `Mailing`; `demo-case` excluída do GitHub, mas ainda existente localmente; reconciliação Vercel pendente.  
 **Limite:** login e consultas locais aprovados; nenhum teste de escrita, envio, importação ou check-in foi executado.
 
 ## 1. Identidade e fontes de verdade
@@ -102,9 +102,9 @@ git show origin/docs/reintegracao-supabase-2026-11-23:RELATORIO_DE_RETOMADA_2026
 | Média | Variáveis Vercel | `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` existem em Production/Preview, mas seus valores sensíveis **não puderam ser confirmados**. Conferir de forma segura antes de redeploy |
 | Média | Operações não homologadas | Planejar testes controlados de Auth, RLS, importações, comunicação, convites, check-in e Edge Functions, considerando dados reais e eventuais efeitos externos |
 | Baixa | Bundle JS | Aviso não bloqueante: chunk de ~936 kB; planejar code splitting |
-| Administrativa | `demo-case` | **Excluir branch remota e local** conforme decisão do usuário; continua existente no GitHub |
+| Administrativa | `demo-case` | **Remota excluída e confirmada**; excluir apenas referência **local** após verificações de segurança |
 
-A `demo-case` contém apenas código de testes/fixtures de demonstração: `e2e/mockSupabase.ts` e `e2e/visualizar-paginas.spec.ts` diferentes da `main`. **Não mesclar** essas mudanças na `main`, nem importá-las ao Supabase. A exclusão remota ainda não ocorreu e a tentativa anterior via PowerShell foi bloqueada por falha de autenticação GitHub.
+A antiga `demo-case` contém apenas código de testes/fixtures de demonstração: `e2e/mockSupabase.ts` e `e2e/visualizar-paginas.spec.ts` diferentes da `main`. **Não mesclar** essas mudanças na `main`, nem importá-las ao Supabase. **A exclusão remota foi confirmada** posteriormente pelo GitHub; permanece a branch **local**, cujo descarte foi autorizado.
 
 ## 6. Limites de preservação
 
@@ -116,12 +116,12 @@ A `demo-case` contém apenas código de testes/fixtures de demonstração: `e2e/
 - Fontes complementares: `README.md`, `RECOVERY.md`, `docs/integrations.md` e `STATUS_E_CONTINUIDADE.md` (cuja seção histórica descreve o antigo período sem acesso ao banco e **não** deve ser usada como estado atual).
 
 
-## 7. Procedimento de encerramento da demo-case — AUTORIZADO, PENDENTE
+## 7. Encerramento da demo-case — REMOTA EXCLUÍDA; LOCAL PENDENTE
 
-- Última verificação de branch remota: `demo-case` presente, sem proteção, SHA `f38d7a26b40c6b27010794caa8964c129c5ce46a`. Comparação `main...demo-case`: **2 commit(s) exclusivos da demo**, **0 commit(s) da `main` ausentes na demo**. O usuário não deseja preservar a demonstração, então **não fazer merge** do mock em `main`.
-- O comando anterior de verificação em PowerShell usou `git ls-remote` e confirmou a existência da branch; **não houve exclusão**. Em EventosInvestRS, uma tentativa anterior de `git push origin --delete demo-case` falhou por autenticação.
-- Remoção remota pelo GitHub Web, com conta autorizada: https://github.com/tuliust/eventosinvestrs/branches → encontrar `demo-case` → escolher a ação **Delete branch**. **Não remover** `main` nem `docs/reintegracao-supabase-2026-11-23`.
-- Depois da exclusão remota, executar `git fetch --prune origin`; confirmar que `git ls-remote --heads origin demo-case` não lista nada, e que a `main` local está limpa e sincronizada. Se nenhuma worktree utilizar a `demo-case`, excluir a branch local com `git branch -D demo-case`. Usar `-D` somente após essas verificações, porque a demo contém commits não mesclados.
-- Atualizar este relatório **somente depois da confirmação efetiva** das exclusões remota e local. Até lá, o status administrativo permanece **PENDENTE**.
+- A remoção remota `demo-case` foi confirmada diretamente na listagem de branches do GitHub para `tuliust/eventosinvestrs`; somente `main`, `docs/reintegracao-supabase-2026-11-23` e outras branches não relacionadas persistem conforme o repositório.
+- O usuário executou `git fetch --prune origin`. Em seguida, `git branch -a --list '*demo-case*'` exibiu apenas `  demo-case`, indicando que a **referência local** não foi removida.
+- O antigo commit exclusivo da demonstração era `f38d7a26b40c6b27010794caa8964c129c5ce46a`. Seu conteúdo demonstrativo não foi mesclado à `main`.
+- Para remover a referência local no Windows: confirmar que a branch atual é `main`, `git status --porcelain` está vazio, `git ls-remote --heads origin demo-case` retorna vazio com sucesso e nenhuma worktree utiliza `demo-case`. Então executar `git branch -D demo-case`. O `-D` é intencional porque a demo continha commits exclusivos e o usuário autorizou seu descarte.
+- Verificar novamente `git branch -a --list '*demo-case*'`. Após saída vazia, registrar **limpeza concluída**; até lá, o status local é **PENDENTE**.
 
-**Estado a registrar no Guia de Retomada:** *Aplicação funcional com Supabase original Mailing recuperado; Git, ambiente, TypeScript, lint, build e 7 grupos de testes locais confirmados em 23/11/2026. Pendentes: exclusão de `demo-case`, reconciliação Vercel e homologação de operações de escrita.*
+**Estado a registrar no Guia de Retomada:** *Aplicação funcional com Supabase original Mailing recuperado; Git, ambiente, TypeScript, lint, build e 7 grupos de testes locais confirmados em 23/11/2026. Pendente: exclusão local de `demo-case`, reconciliação Vercel e homologação de operações de escrita.*
