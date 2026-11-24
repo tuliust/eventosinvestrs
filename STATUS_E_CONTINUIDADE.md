@@ -1,5 +1,50 @@
 # Eventos Invest RS — Estado do projeto e guia de continuidade
 
+## ATUALIZAÇÃO PRIORITÁRIA — SUPABASE RECUPERADO (23/11/2026)
+
+> **Esta seção substitui o estado de perda de acesso ao banco descrito nas seções históricas abaixo.** O projeto Supabase original foi recuperado na nova conta e está ativo. A demonstração em `demo-case` será descontinuada por decisão do usuário. Os dados reais não devem ser substituídos por mocks.
+>
+> **Escopo:** auditoria por leitura. Aplicação local e dados reais no frontend ainda não passaram por novo teste; Vercel não foi alterada.
+
+### Identidade atual
+
+- Repositório: `tuliust/eventosinvestrs`, branch `main`, commit `43d6bf39f66d152bf57abbb256565061a4cf56e7`.
+- Pasta informada: `C:\Users\Tulius\Documents\github\eventosinvestrs`.
+- Supabase original: `Mailing`, projeto ref `kcixoybbxcogpqlgeaoi`; `https://kcixoybbxcogpqlgeaoi.supabase.co`, **ACTIVE_HEALTHY**, `sa-east-1`.
+- Organização atual: `Mailing`, ID `itqbkoctfztjzdcdjhny`, acessível via conexão Supabase da nova conta. Não associar automaticamente a referências da antiga organização InvestRS.
+- `README.md`, `.env.example` e `src/lib/supabase.ts` já usam a URL/ref original; as variáveis do frontend são `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` (com fallback para `VITE_SUPABASE_ANON_KEY`).
+- A aplicação usa **pnpm 10.34.3**, conforme `package.json`. Não trocar por npm sem analisar o lockfile.
+
+### Inventário recuperado — leitura
+
+- **33 tabelas `public`**, todas com RLS habilitado.
+- **41 migrations no GitHub = 41 migrations no histórico remoto**, versões e nomes integralmente alinhados.
+- Auth: **3 usuários**; Storage: **2 buckets e 1 objeto**.
+- Edge Functions: **7 ativas** — `import-organizations-v2`, `admin-users`, `beehiiv-integration`, `import-contacts`, `import-organizations`, `admin-settings`, `admin-maintenance`.
+- Contagens: **3 perfis**, **3.875 organizações**, **3.107 contatos**, **2 eventos**, **69 inscrições**, **1.040 convites**, **13 presenças**, **1.040 vínculos com mailing**, **1 lista**, **1 configuração**, **2 documentos do Guia de Boas-vindas**.
+- Supabase Advisors: WARN para `authenticated_security_definer_function_executable` e `auth_leaked_password_protection`. Nenhuma política foi alterada.
+- Não houve recuperação por seeds nesta rodada; os registros históricos já estavam disponíveis no Supabase reativado.
+
+### Branch de demonstração — descontinuação
+
+- `demo-case`: 2 commits exclusivos em relação à `main` e 0 commits faltantes da `main`, alterando `e2e/mockSupabase.ts` e adicionando `e2e/visualizar-paginas.spec.ts`. **Decisão expressa: não manter a branch demo.**
+- Ainda não foi excluída. Preservar arquivos locais não rastreados até confirmar seu estado e só então remover a branch remota/local.
+- Não executar o Playwright com interceptador/mock para validar o backend real e não importar fixtures artificiais.
+
+### Vercel e continuidade
+
+- Vercel acessível: projeto `eventos`, ID `prj_JcLGZfKtIdmkXr17Zjql7DocChow`, domínio `bemvindo.eventosinvestrs.com.br` verificado.
+- O deployment `READY` atualmente listado aponta para `8613028b8f392ccbb0bccb33d7f61aca7d34b637`, SHA **não encontrado** no histórico consultado de `tuliust/eventosinvestrs`; logo **não afirmar que essa publicação corresponde à `main` atual**. Investigar vínculo e função do deployment antes de publicar.
+- Vercel declara `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` em Preview/Production, porém o conector não conseguiu recuperar os valores (classificados como sensíveis). Não assumir que correspondem às chaves atuais.
+- Verificar `git status`, alinhar `main` sem perder mudanças locais, confirmar `.env.local` via teste mascarado, executar `pnpm install --frozen-lockfile`, `pnpm build` e `pnpm dev` apenas quando a sessão estiver compatível e a instalação for necessária.
+- Validar login, dados de contatos, organizações, eventos e mailing **por leitura** antes de qualquer importação, envio, edição, check-in ou deploy.
+- Nenhuma migration, seed, operação SQL mutável, alteração de Auth, Edge Function, Vercel ou deploy foi feita.
+
+**Status desta rodada:** backend histórico recuperado e inventariado; dados preservados; migrações alinhadas; validação funcional local da `main` ainda pendente.
+
+---
+
+
 > **Status (23/11/2026): STANDBY — case de portfólio concluído.**
 >
 > **ALERTA:** os dados exibidos nos prints são **fictícios (mock)**. A prévia funciona por meio de um simulador do Supabase executado no Playwright; **não há conexão ativa e validada com o Supabase original**. Login, indicadores e mensagens de sincronização apresentados nessa prévia não demonstram operação real.
