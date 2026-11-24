@@ -4,6 +4,8 @@
 
 > **Auditoria complementar de segurança e publicação — 23/11/2026:** o relatório consolidado, na seção 9, inclui **comandos PowerShell para VS Code**, revisão preliminar dos privilégios `SECURITY DEFINER` e a **causa exata** da divergência Git/Vercel: projeto Vercel `eventos` conectado a **`investrs2026/eventos`**, enquanto a aplicação recuperada está em **`tuliust/eventosinvestrs`**. O deployment `READY` tem SHA `8613028b8f392ccbb0bccb33d7f61aca7d34b637`, correspondente ao identificador do snapshot `eventos-main(2).zip` registrado em `RECOVERY.md`. **Não mudar o vínculo Git nem publicar sem staging e validação de produção.** PR documental: https://github.com/tuliust/eventosinvestrs/pull/1 (draft, sem merge).
 
+> **Validação de VS Code e diagnóstico de domínio — 23/11/2026:** `main...origin/main` limpa (`0 0`); TypeScript/lint/build aprovados; Vercel CLI identificou `eventos`. No teste de HTTP: **200** para `bemvindo.eventosinvestrs.com.br` e **404** para `eventosinvestrs.com.br`. A API da Vercel confirmou que a raiz e `www` **não estão associados** ao projeto, embora a zona esteja verificada na equipe `tuliust`; apenas o subdomínio `bemvindo` está vinculado. Além disso, o Vercel `eventos` continua ligado ao GitHub `investrs2026/eventos`, não a `tuliust/eventosinvestrs`. **Não conectar a raiz nem mudar Git antes de homologar staging.** Detalhes na seção 10 do relatório.
+
 > **Relatório consolidado para futuras retomadas:** [RELATORIO_DE_RETOMADA_2026-11-23.md](RELATORIO_DE_RETOMADA_2026-11-23.md) — estado atual, evidências, procedimentos e pendências. O relatório é a referência rápida; este documento preserva a trilha histórica da auditoria.
 
 ## ATUALIZAÇÃO PRIORITÁRIA — SUPABASE RECUPERADO (23/11/2026)
