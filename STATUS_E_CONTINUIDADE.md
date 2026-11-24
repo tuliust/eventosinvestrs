@@ -2,6 +2,8 @@
 
 > **Encerramento da limpeza Git — 23/11/2026: CONCLUÍDO.** A branch `demo-case` foi removida **do GitHub e dos dois computadores locais/repositórios verificados**. O usuário executou o procedimento seguro e enviou saída com `Deleted branch demo-case`, `git branch -a --list '*demo-case*'` vazio e `## main...origin/main` em ambos os repositórios. A ausência das branches remotas foi confirmada diretamente no GitHub. `main`, documentação, banco Supabase e Vercel foram preservados.
 
+> **Auditoria complementar de segurança e publicação — 23/11/2026:** o relatório consolidado, na seção 9, inclui **comandos PowerShell para VS Code**, revisão preliminar dos privilégios `SECURITY DEFINER` e a **causa exata** da divergência Git/Vercel: projeto Vercel `eventos` conectado a **`investrs2026/eventos`**, enquanto a aplicação recuperada está em **`tuliust/eventosinvestrs`**. O deployment `READY` tem SHA `8613028b8f392ccbb0bccb33d7f61aca7d34b637`, correspondente ao identificador do snapshot `eventos-main(2).zip` registrado em `RECOVERY.md`. **Não mudar o vínculo Git nem publicar sem staging e validação de produção.** PR documental: https://github.com/tuliust/eventosinvestrs/pull/1 (draft, sem merge).
+
 > **Relatório consolidado para futuras retomadas:** [RELATORIO_DE_RETOMADA_2026-11-23.md](RELATORIO_DE_RETOMADA_2026-11-23.md) — estado atual, evidências, procedimentos e pendências. O relatório é a referência rápida; este documento preserva a trilha histórica da auditoria.
 
 ## ATUALIZAÇÃO PRIORITÁRIA — SUPABASE RECUPERADO (23/11/2026)
