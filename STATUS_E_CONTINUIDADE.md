@@ -1,5 +1,7 @@
 # Eventos Invest RS — Estado do projeto e guia de continuidade
 
+> **Relatório consolidado para futuras retomadas:** [RELATORIO_DE_RETOMADA_2026-11-23.md](RELATORIO_DE_RETOMADA_2026-11-23.md) — estado atual, evidências, procedimentos e pendências. O relatório é a referência rápida; este documento preserva a trilha histórica da auditoria.
+
 ## ATUALIZAÇÃO PRIORITÁRIA — SUPABASE RECUPERADO (23/11/2026)
 
 > **Esta seção substitui o estado de perda de acesso ao banco descrito nas seções históricas abaixo.** O projeto Supabase original foi recuperado na nova conta e está ativo. A demonstração em `demo-case` será descontinuada por decisão do usuário. Os dados reais não devem ser substituídos por mocks.
