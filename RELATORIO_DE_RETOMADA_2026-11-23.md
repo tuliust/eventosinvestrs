@@ -1,5 +1,7 @@
 # RELATÓRIO DE RETOMADA — EVENTOSINVESTRS
 
+> **MARCO FINAL — 24/11/2026:** a recuperação local está **CONCLUÍDA E DOCUMENTADA**, sem alterações em produção ou banco. Leia primeiro [ENCERRAMENTO_RECUPERACAO_2026-11-24.md](ENCERRAMENTO_RECUPERACAO_2026-11-24.md). A homologação de produção constitui **nova fase**, rastreada em [issue #2](https://github.com/tuliust/eventosinvestrs/issues/2); não interpretá-la como parte não concluída da recuperação. O PR documental permanece rascunho para evitar merge/deploy automático.
+
 > **Encerramento da limpeza Git — 23/11/2026: CONCLUÍDO.** A branch `demo-case` foi removida **do GitHub e dos dois computadores locais/repositórios verificados**. O usuário executou o procedimento seguro e enviou saída com `Deleted branch demo-case`, `git branch -a --list '*demo-case*'` vazio e `## main...origin/main` em ambos os repositórios. A ausência das branches remotas foi confirmada diretamente no GitHub. `main`, documentação, banco Supabase e Vercel foram preservados.
 
 **Data da verificação:** 23/11/2026  
