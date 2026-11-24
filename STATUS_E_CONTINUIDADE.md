@@ -15,6 +15,19 @@
 - `README.md`, `.env.example` e `src/lib/supabase.ts` já usam a URL/ref original; as variáveis do frontend são `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` (com fallback para `VITE_SUPABASE_ANON_KEY`).
 - A aplicação usa **pnpm 10.34.3**, conforme `package.json`. Não trocar por npm sem analisar o lockfile.
 
+### Diagnóstico do Windows — 23/11/2026
+
+O usuário executou verificações locais em `C:\Users\Tulius\Documents\github\eventosinvestrs`:
+
+- `git status --short --branch`: `## main...origin/main`, sem arquivos locais alterados ou não rastreados visíveis.
+- `git rev-list --left-right --count main...origin/main`: `0 0`. Git local alinhado ao remoto.
+- Node.js `v24.22.1`; pnpm `10.34.3` (versão informada no `package.json`).
+- `Test-Path .env.local`: **ausente**. Ainda não há configuração local verificada para conectar o navegador ao Supabase real.
+- `.gitignore` da `main` exclui `.env*` com exceção de `.env.example`; a chave pública/ambiente deve permanecer exclusivamente em `.env.local`.
+- A `.env.example` já contém a URL original e o nome `VITE_SUPABASE_PUBLISHABLE_KEY`; copiar para `.env.local` e substituir o valor de exemplo pela chave pública `sb_publishable_` do projeto `kcixoybbxcogpqlgeaoi`. Não inserir uma chave secret/service-role nas variáveis `VITE_`, e não imprimir ou compartilhar credenciais.
+- **Próxima evidência:** confirmação mascarada de URL correta, prefixo de chave publicável e ausência de chave secret, seguida de `pnpm install --frozen-lockfile` quando necessário, `pnpm build` e teste local de login e leitura. Nenhum fluxo de escrita ou deploy autorizado.
+- Exclusão da branch `demo-case` ainda pendente; o último `git push origin --delete demo-case` falhou por autenticação GitHub, sem comprovação de exclusão remota.
+
 ### Inventário recuperado — leitura
 
 - **33 tabelas `public`**, todas com RLS habilitado.
