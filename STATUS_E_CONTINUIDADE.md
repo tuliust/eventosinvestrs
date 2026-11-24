@@ -25,7 +25,7 @@ O usuário executou verificações locais em `C:\Users\Tulius\Documents\github\e
 - `Test-Path .env.local`: **ausente**. Ainda não há configuração local verificada para conectar o navegador ao Supabase real.
 - `.gitignore` da `main` exclui `.env*` com exceção de `.env.example`; a chave pública/ambiente deve permanecer exclusivamente em `.env.local`.
 - A `.env.example` já contém a URL original e o nome `VITE_SUPABASE_PUBLISHABLE_KEY`; copiar para `.env.local` e substituir o valor de exemplo pela chave pública `sb_publishable_` do projeto `kcixoybbxcogpqlgeaoi`. Não inserir uma chave secret/service-role nas variáveis `VITE_`, e não imprimir ou compartilhar credenciais.
-- **Próxima evidência:** confirmação mascarada de URL correta, prefixo de chave publicável e ausência de chave secret, seguida de `pnpm install --frozen-lockfile` quando necessário, `pnpm build` e teste local de login e leitura. Nenhum fluxo de escrita ou deploy autorizado.
+- **Próxima evidência (atualização):** URL e chave publicável já confirmadas, `pnpm run typecheck`, `pnpm run lint` e `pnpm run build` aprovados. Falta teste local de login e leitura. Nenhum fluxo de escrita ou deploy autorizado.
 - Exclusão da branch `demo-case` ainda pendente; o último `git push origin --delete demo-case` falhou por autenticação GitHub, sem comprovação de exclusão remota.
 
 ### Configuração local do Supabase confirmada — 23/11/2026
@@ -37,9 +37,23 @@ O usuário criou `.env.local` a partir da referência local e executou verifica�
 - Prefixo `sb_secret_` nessa variável pública: **False**.
 - `git status --short --branch`: `## main...origin/main` — sem alterações locais apresentadas.
 - Aplicação na branch `main` (não demo); o mock Playwright não é utilizado para a integração real.
-- **Conclusão parcial:** variáveis corretas e configuração local pronta para testes, mas autenticação, consultas reais e build ainda não testados no navegador nesta etapa.
+- **Conclusão parcial (atualização):** variáveis corretas e build aprovado; autenticação e consultas reais ainda não foram testadas no navegador.
 - **Próxima verificação:** `pnpm build` e `pnpm dev` com pnpm 10.34.3; verificar navegação, login administrativo existente, contatos, organizações, eventos e mailing somente por leitura.
 - Não executar migrations, seeds, importações, envio de e-mails, convites, check-in ou operações de escrita. Não mudar Vercel.
+
+### Build e verificações locais aprovados — 23/11/2026
+
+O usuário executou, na `main` sincronizada e com `.env.local` apontando para o Supabase original:
+
+- `pnpm run typecheck` (`tsc --noEmit`): **aprovado**, sem erros.
+- `pnpm run lint` (`eslint src tests e2e --max-warnings=0`): **aprovado**, sem erros ou warnings.
+- `pnpm run build`: **aprovado**, Vite `v8.0.5`, **151 módulos transformados**, compilado em **686 ms**.
+- Artefatos: HTML `1,56 kB`, CSS `68,12 kB` (gzip `12,47 kB`), JS `936,03 kB` (gzip `247,08 kB`).
+- Aviso **não bloqueante**: chunk JS maior que 500 kB; otimização futura por code splitting, sem alterar o comportamento agora.
+- `git status --short --branch` após o build: `## main...origin/main`, sem alterações locais.
+- **Não executado nesta rodada:** `pnpm test` (vitest), testes E2E (backend mockado), migrations, seeds, alterações de Auth/Storage/Edge Functions, importações ou deploy.
+- **Próximo teste:** `pnpm dev`; autenticar com usuário administrativo existente e confirmar visualmente a navegação/consultas reais em `/` (Dashboard), `/eventos`, `/mailing`, `/contatos`, `/organizacoes`, `/segmentacoes` e `/relatorios`. O login é em `/login`. Somente leitura, sem criar/importar/editar/excluir registros, fazer check-in ou enviar mensagens.
+- A compilação não comprova por si só que as rotas, autenticação e consultas reais funcionem, tampouco homologa a produção Vercel.
 
 ### Inventário recuperado — leitura
 
