@@ -134,7 +134,7 @@ A antiga `demo-case` continha código de testes/fixtures de demonstração, incl
 - GitHub: `main` permanece em `43d6bf39f66d152bf57abbb256565061a4cf56e7`; a branch documental difere somente por este relatório e `STATUS_E_CONTINUIDADE.md`. Não há branch remota `demo-case`.
 - Supabase `kcixoybbxcogpqlgeaoi`: `ACTIVE_HEALTHY`; consulta SQL **somente leitura** retornou `contacts=3107`, `organizations=3875`, `events=2`, `event_registrations=69`, `event_invites=1040`, `event_attendances=13`, `mailing_list_contacts=1040`. Valores compatíveis com o inventário da recuperação; nenhuma alteração de registros foi executada.
 - Vercel: projeto `eventos`, deployment de produção `dpl_14jgMHXrVWNXzVhrQKLWBsiTkGKn` com estado `READY`, atribuído a commit `8613028b8f392ccbb0bccb33d7f61aca7d34b637`, **divergente do SHA conhecido de `tuliust/eventosinvestrs/main`**. Os metadados citam repositório `eventos`; é necessário verificar a integração Git antes de qualquer merge ou redeploy.
-- Os aliases do deployment incluem `eventosinvestrs.com.br`, `www.eventosinvestrs.com.br` e `bemvindo.eventosinvestrs.com.br`. O domínio de boas-vindas aparece como verificado no projeto; associação e funcionamento do domínio principal exigem homologação direta.
+- A inspeção posterior por APIs de **domínios vinculados** (mais confiável para roteamento do que o campo histórico `alias` do deployment) confirmou que **somente** `bemvindo.eventosinvestrs.com.br` está vinculado e verificado no projeto `eventos`. Os domínios `eventosinvestrs.com.br` e `www.eventosinvestrs.com.br` **não estão associados ao projeto**. O domínio raiz existe, está verificado na equipe `tuliust` e usa nameservers Vercel. O usuário confirmou HTTP 404 na raiz e HTTP 200 no subdomínio `bemvindo`. A associação dos domínios principais é uma etapa separada de publicação, condicionada à revisão do vínculo Git antigo.
 - Vercel contém as variáveis sensíveis `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` para Production/Preview, porém **os valores não foram confirmados**.
 - Supabase Security Advisors: 2 avisos `WARN` — função `SECURITY DEFINER` executável por usuários autenticados e proteção contra senhas vazadas desativada. Validar função, autorização efetiva, Auth e integrações externas antes de qualquer ajuste.
 - **Decisão de segurança:** nenhum merge na `main`, deploy, alteração em Auth/RLS, secrets, migrations, importações, comunicação ou check-in. Preparar incorporação **documental** por Pull Request, com revisão antes de merge.
@@ -218,3 +218,39 @@ O `vercel project inspect` é leitura; não altera o vínculo Git. **Não execut
 - **Concluído:** banco recuperado; migrations alinhadas; Git e testes locais; exclusão da demo; identificação exata do Git antigo na Vercel; auditoria preliminar dos privilégios de funções; documentação.
 - **Pendente:** validar preview/staging da `main` atual; decidir e executar mudança controlada do vínculo Vercel; conferir os valores das variáveis em ambiente protegido; homologar Auth, RLS, importações, e-mails, convites, check-ins e integrações externas sem dados de produção.
 - Pull Request documental: https://github.com/tuliust/eventosinvestrs/pull/1 (**draft**, sem merge). A incorporação à `main` deve aguardar revisão dos gatilhos de deploy.
+
+## 10. Resultado de execução no VS Code e causa do HTTP 404 — 23/11/2026
+
+O usuário executou os comandos de validação em PowerShell no VS Code e enviou a saída integral:
+
+| Verificação | Resultado |
+| --- | --- |
+| `git status --short --branch` inicial/final | `## main...origin/main` (limpa e sincronizada) |
+| `git rev-list --left-right --count main...origin/main` | `0 0` |
+| `git branch -a --list '*demo-case*'` | Sem entradas |
+| `git remote get-url origin` | `https://github.com/tuliust/eventosinvestrs.git` |
+| `pnpm run typecheck` | **APROVADO** |
+| `pnpm run lint` | **APROVADO**, zero warnings |
+| `pnpm run build` | **APROVADO**, Vite `8.0.5`, 151 módulos, 619 ms |
+| Otimização | Aviso **não bloqueante** de JS 936,03 kB (gzip 247,08 kB) |
+| `vercel.cmd project inspect eventos --scope tuliust` | Projeto `prj_JcLGZfKtIdmkXr17Zjql7DocChow` encontrado; Vite, Node 24.x |
+| HTTP `HEAD https://eventosinvestrs.com.br/` | **HTTP 404** |
+| HTTP `HEAD https://bemvindo.eventosinvestrs.com.br/` | **HTTP 200** |
+
+### Diagnóstico de domínio por API autenticada da Vercel
+
+- A zona `eventosinvestrs.com.br` consta no inventário de domínios da equipe `tuliust`, com `verified=true` e nameservers `ns1.vercel-dns.com` / `ns2.vercel-dns.com`.
+- No projeto Vercel `eventos` **somente** o domínio `bemvindo.eventosinvestrs.com.br` está associado (`verified=true`).
+- A busca específica de `eventosinvestrs.com.br` e `www.eventosinvestrs.com.br` no projeto retorna **`404 Project Domain not found`**. A consulta de todos os domínios da zona na equipe confirma uma única associação: `bemvindo.eventosinvestrs.com.br`.
+- **Causa identificada para o 404 da raiz:** não existe associação do domínio principal ao projeto de produção; a verificação DNS da zona não cria automaticamente um domínio de projeto.
+- **Segunda divergência independente:** o projeto Vercel `eventos` está ligado a `investrs2026/eventos`, mas a aplicação recuperada/testada é `tuliust/eventosinvestrs`. A associação imediata da raiz serviria o deployment **antigo**, e não necessariamente a versão recuperada/validada localmente.
+
+### Ordem segura para homologar a publicação
+
+1. Conferir no painel da equipe `tuliust` → projeto Vercel `eventos` → Settings → Git qual código/branch está vinculado; preservar o deployment existente até haver preview aprovado da `main` recuperada.
+2. Conferir **privadamente** em Settings → Environment Variables os valores públicos de URL/chave Supabase, sem copiar tokens para logs ou chat.
+3. Preparar e homologar um **preview/staging controlado**, sem dados reais mutáveis e sem enviar mensagens/check-ins.
+4. Após homologação e decisão de publicação, conectar o código correto ao projeto, associar `eventosinvestrs.com.br` e `www.eventosinvestrs.com.br` em Settings → Domains, configurar redirecionamento desejado e validar HTTP 200, login e consultas reais na produção.
+5. Rever acesso, Auth e RLS. Testes de escrita devem ser feitos apenas em staging isolado, usando dados sintéticos e sem saídas externas.
+
+**Não foram feitas alterações de domínios, DNS, integração Git, configuração da Vercel, banco, migrations ou código.** O PR #1 segue **draft**, apenas documental; o encerramento da **recuperação local** permanece concluído, enquanto o encerramento da **publicação/homologação de produção** permanece pendente.
