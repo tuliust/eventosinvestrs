@@ -1,0 +1,3 @@
+# Preview isolado — critérios de release
+
+Build do SHA recuperado em projeto Vercel independente, protegido por autenticação, sem domínios de produção ou variáveis Supabase reais. O frontend suporta ausência da configuração Supabase; o login e a homologação autenticada ficam bloqueados até provisionamento de backend de teste separado. Não copiar dados pessoais, credenciais ou integrações de produção. Preservar o projeto original e o domínio bemvindo. Não efetuar envio real, check-in, importação ou sincronização. Antes de vincular produção, validar build, rotas, autorização, fluxos de dados sintéticos, rollback e homologação explícita.
